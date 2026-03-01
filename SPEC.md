@@ -106,9 +106,43 @@ Pasteur (Admin Total)
   "type": "MOBILISATION | TEACHING | PRAYER | SERVICE",
   "attendees": ["userId"],
   "absentees": ["userId"],
+  "absenteeReasons": { "userId": "reason" },
   "listened": ["userId"],
   "notes": "string",
   "createdBy": "userId"
+}
+```
+
+### WeeklyReport (Rapport du Berger)
+```json
+{
+  "id": "uuid",
+  "bergerId": "uuid",
+  "weekStart": "date",
+  "weekEnd": "date",
+  "personalLife": "string",        // Vie personnelle
+  "bergerWork": "string",          // Travail du berger
+  "churchProgram": {
+    "monthlyActivities": "string",  // Activités mensuelles
+    "prayerChains": "string",      // Chaînes de prière
+    "qi": "string"                 // QI
+  },
+  "bookToStudy": "string",         // Le livre à étudier
+  "absences": {
+    "names": ["userId"],
+    "reasons": { "userId": "reason" }
+  },
+  "supervision": {
+    "theme": "string",             // Thème d'encadrement
+    "visitedPersons": ["userId"],
+    "visitPurpose": "string",
+    "visitDate": "date",
+    "visitTime": "time"
+  },
+  "otherObservations": "string",
+  "signature": "boolean",
+  "signedAt": "date",
+  "status": "DRAFT | SUBMITTED"
 }
 ```
 
@@ -170,5 +204,14 @@ Pasteur (Admin Total)
 2. **Dashboard** - Différent selon rôle
 3. **Membres** - Liste + gestion membres
 4. **Activités** - Formulaire de saisie présence
-5. **Rapports** - Visualisation + export PDF
-6. **Paramètres** - Profil + configuration
+5. **Rapport Hebdomadaire** - Formulaire PDF (comme modèle)
+   - Vie personnelle
+   - Travail du berger
+   - Programme église (activités, chaînes prière, QI)
+   - Livre à étudier
+   - Absences (noms + raisons)
+   - Encadrement (thème, personnes visitées, date/heure)
+   - Autres observations
+   - Signature
+6. **Rapports** - Visualisation + export PDF
+7. **Paramètres** - Profil + configuration
