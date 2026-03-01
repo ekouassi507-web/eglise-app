@@ -6,6 +6,7 @@ import Members from './pages/members/Members'
 import Activities from './pages/activities/Activities'
 import Reports from './pages/reports/Reports'
 import Analytics from './pages/analytics/Analytics'
+import Settings from './pages/settings/Settings'
 import Layout from './components/layout/Layout'
 
 function PrivateRoute({ children, requiredRole }: { children: React.ReactNode, requiredRole?: string }) {
@@ -16,7 +17,6 @@ function PrivateRoute({ children, requiredRole }: { children: React.ReactNode, r
     return <Navigate to="/login" />
   }
   
-  // If role is required and user doesn't have it (except PASTEUR who has access to everything)
   if (requiredRole && user?.role !== requiredRole && user?.role !== 'PASTEUR') {
     return <Navigate to="/" />
   }
@@ -57,6 +57,11 @@ function App() {
                 <Route path="/analytics" element={
                   <PrivateRoute requiredRole="PASTEUR">
                     <Analytics />
+                  </PrivateRoute>
+                } />
+                <Route path="/settings" element={
+                  <PrivateRoute requiredRole="PASTEUR">
+                    <Settings />
                   </PrivateRoute>
                 } />
               </Routes>

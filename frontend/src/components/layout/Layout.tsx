@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   LayoutDashboard, Users, Calendar, FileText, 
-  BarChart3, Menu, LogOut, Church 
+  BarChart3, Menu, Settings, LogOut, Church 
 } from 'lucide-react'
 import { useAuthStore } from '../../stores/auth'
 
@@ -19,6 +19,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { path: '/activities', icon: Calendar, label: 'Activités', roles: ['PASTEUR', 'RESPONSABLE', 'BG_LEADER'] },
     { path: '/reports', icon: FileText, label: 'Rapports', roles: ['PASTEUR', 'RESPONSABLE', 'BG_LEADER'] },
     { path: '/analytics', icon: BarChart3, label: 'Statistiques', roles: ['PASTEUR'] },
+  { path: '/settings', icon: Settings, label: 'Paramètres', roles: ['PASTEUR'] },
   ]
 
   // Filter nav items based on user role
