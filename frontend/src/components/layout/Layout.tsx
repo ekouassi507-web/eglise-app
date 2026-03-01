@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   LayoutDashboard, Users, Calendar, FileText, 
@@ -7,27 +7,40 @@ import {
 } from 'lucide-react'
 import { useAuthStore } from '../../stores/auth'
 
-const navItems = [
-  { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
-  { path: '/members', icon: Users, label: 'Membres' },
-  { path: '/activities', icon: Calendar, label: 'Activités' },
-  { path: '/reports', icon: FileText, label: 'Rapports' },
-  { path: '/analytics', icon: BarChart3, label: 'Statistiques' },
-]
-
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
   const { user, logout } = useAuthStore()
+
+  const navItems = [
+    { path: '/', icon: LayoutDashboard, label: 'Dashboard', roles: ['PASTEUR', 'RESPONSABLE', 'BG_LEADER'] },
+    { path: '/members', icon: Users, label: 'Membres', roles: ['PASTEUR'] },
+    { path: '/activities', icon: Calendar, label: 'Activités', roles: ['PASTEUR', 'RESPONSABLE', 'BG_LEADER'] },
+    { path: '/reports', icon: FileText, label: 'Rapports', roles: ['PASTEUR', 'RESPONSABLE', 'BG_LEADER'] },
+    { path: '/analytics', icon: BarChart3, label: 'Statistiques', roles: ['PASTEUR'] },
+  ]
+
+  // Filter nav items based on user role
+  const filteredNavItems = navItems.filter(item => 
+    user?.role && item.roles.includes(user.role)
+  )
 
   const handleLogout = () => {
     logout()
-    window.location.href = '/login'
+    navigate('/login')
+  }
+
+  // Redirect if current path is not accessible
+  const currentPath = location.pathname
+  const hasAccess = filteredNavItems.some(item => item.path === currentPath)
+  
+  if (currentPath !== '/' && currentPath !== '/login' && !hasAccess && user) {
+    navigate('/')
   }
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex">
-      {/* Mobile sidebar backdrop */}
       <AnimatePresence>
         {sidebarOpen && (
           <motion.div
@@ -40,14 +53,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         )}
       </AnimatePresence>
 
-      {/* Sidebar */}
       <aside className={`
         fixed lg:static inset-y-0 left-0 z-50 w-64 bg-[#0a0a0a] border-r border-white/5
         transform transition-transform duration-300 lg:transform-none
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="flex flex-col h-full">
-          {/* Logo */}
           <div className="p-6 border-b border-white/5">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
@@ -60,9 +71,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
 
-          {/* Navigation */}
           <nav className="flex-1 p-4 space-y-2">
-            {navItems.map((item) => {
+            {filteredNavItems.map((item) => {
               const isActive = location.pathname === item.path
               return (
                 <Link
@@ -84,10 +94,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             })}
           </nav>
 
-          {/* User & Logout */}
           <div className="p-4 border-t border-white/5">
             <div className="flex items-center gap-3 mb-4 px-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-sm font-bold">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full text-sm font flex items-center justify-bold">
                 {user?.name?.charAt(0) || 'U'}
               </div>
               <div className="flex-1 min-w-0">
@@ -106,21 +115,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      {/* Main content */}
       <main className="flex-1 min-h-screen">
-        {/* Mobile header */}
         <header className="lg:hidden flex items-center justify-between p-4 border-b border-white/5">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-xl hover:bg-white/5"
-          >
+          <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-xl hover:bg-white/5">
             <Menu className="w-6 h-6" />
           </button>
           <span className="font-bold">Eglise App</span>
           <div className="w-10" />
         </header>
 
-        {/* Page content */}
         <div className="p-6 lg:p-8">
           {children}
         </div>
