@@ -2,6 +2,10 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from './stores/auth'
 import Login from './pages/auth/Login'
 import Dashboard from './pages/dashboard/Dashboard'
+import Members from './pages/members/Members'
+import Activities from './pages/activities/Activities'
+import Reports from './pages/reports/Reports'
+import Analytics from './pages/analytics/Analytics'
 import Layout from './components/layout/Layout'
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
@@ -21,10 +25,10 @@ function App() {
               <Layout>
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
-                  <Route path="/members" element={<Dashboard />} />
-                  <Route path="/activities" element={<Dashboard />} />
-                  <Route path="/reports" element={<Dashboard />} />
-                  <Route path="/analytics" element={<Dashboard />} />
+                  <Route path="/members" element={<Members />} />
+                  <Route path="/activities" element={<Activities />} />
+                  <Route path="/reports" element={<Reports />} />
+                  <Route path="/analytics" element={<Analytics />} />
                 </Routes>
               </Layout>
             </PrivateRoute>
