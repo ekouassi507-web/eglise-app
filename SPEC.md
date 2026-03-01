@@ -124,8 +124,11 @@ Pasteur (Admin Total)
   "bergerWork": "string",          // Travail du berger
   "churchProgram": {
     "monthlyActivities": "string",  // Activités mensuelles
-    "prayerChains": "string",      // Chaînes de prière
-    "qi": "string"                 // QI
+    "prayerChains": "string",     // Chaînes de prière
+    "qi": {
+      "quotidien": "boolean",     // Prière/méditation quotidienne
+      "intermittent": "boolean"    // Prière/méditation intermittente
+    }
   },
   "bookToStudy": "string",         // Le livre à étudier
   "absences": {
