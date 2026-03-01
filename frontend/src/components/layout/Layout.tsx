@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   LayoutDashboard, Users, Calendar, FileText, 
-  BarChart3, Menu, X, LogOut, Church 
+  BarChart3, Menu, LogOut, Church 
 } from 'lucide-react'
 import { useAuthStore } from '../../stores/auth'
 

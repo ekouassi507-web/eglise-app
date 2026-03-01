@@ -1,6 +1,5 @@
-import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Calendar, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 
 export default function Activities() {
   return (

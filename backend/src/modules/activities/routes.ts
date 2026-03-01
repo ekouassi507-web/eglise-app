@@ -8,8 +8,8 @@ const prisma = new PrismaClient();
 
 const activitySchema = z.object({
   weekStart: z.string(),
-  day: z.enum(['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']),
-  type: z.enum(['MOBILIZATION', 'TEACHING', 'PRAYER', 'SERVICE']),
+  day: z.string(),
+  type: z.string(),
   attendees: z.array(z.string()).optional(),
   absentees: z.array(z.string()).optional(),
   absenteeReasons: z.record(z.string()).optional(),
@@ -54,15 +54,21 @@ router.get('/', authenticate, async (req: AuthRequest, res: Response) => {
 router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const data = activitySchema.parse(req.body);
-    data.attendees = JSON.stringify(data.attendees || []);
-    data.absentees = JSON.stringify(data.absentees || []);
-    data.absenteeReasons = JSON.stringify(data.absenteeReasons || {});
-    data.listened = JSON.stringify(data.listened || []);
-    data.weekStart = new Date(data.weekStart);
-    data.createdById = req.user!.id;
+    
+    const activityData = {
+      weekStart: new Date(data.weekStart),
+      day: data.day,
+      type: data.type,
+      attendees: JSON.stringify(data.attendees || []),
+      absentees: JSON.stringify(data.absentees || []),
+      absenteeReasons: JSON.stringify(data.absenteeReasons || {}),
+      listened: JSON.stringify(data.listened || []),
+      notes: data.notes || null,
+      createdById: req.user!.id
+    };
 
     const activity = await prisma.activity.create({
-      data
+      data: activityData as any
     });
 
     res.status(201).json(activity);
@@ -76,12 +82,16 @@ router.put('/:id', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const data = activitySchema.parse(req.body);
     
-    const updateData: any = { ...data };
-    updateData.attendees = JSON.stringify(data.attendees || []);
-    updateData.absentees = JSON.stringify(data.absentees || []);
-    updateData.absenteeReasons = JSON.stringify(data.absenteeReasons || {});
-    updateData.listened = JSON.stringify(data.listened || []);
-    updateData.weekStart = new Date(data.weekStart);
+    const updateData: any = {
+      day: data.day,
+      type: data.type,
+      attendees: JSON.stringify(data.attendees || []),
+      absentees: JSON.stringify(data.absentees || []),
+      absenteeReasons: JSON.stringify(data.absenteeReasons || {}),
+      listened: JSON.stringify(data.listened || []),
+      notes: data.notes || null,
+      weekStart: new Date(data.weekStart)
+    };
 
     const activity = await prisma.activity.update({
       where: { id: req.params.id },

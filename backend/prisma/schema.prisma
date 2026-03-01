@@ -7,52 +7,16 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-enum Role {
-  PASTEUR
-  RESPONSABLE
-  BG_LEADER
-}
-
-enum GroupName {
-  PUISSANCE
-  SAGESSE
-  GLOIRE
-}
-
-enum SubGroup {
-  LOUANGE
-  FORCE
-  FAUSSES
-  RICHESSES
-}
-
-enum DayOfWeek {
-  MONDAY
-  TUESDAY
-  WEDNESDAY
-  THURSDAY
-  FRIDAY
-  SATURDAY
-  SUNDAY
-}
-
-enum ActivityType {
-  MOBILIZATION
-  TEACHING
-  PRAYER
-  SERVICE
-}
-
 model User {
   id           String    @id @default(uuid())
   email        String    @unique
   password     String
   name         String
   phone        String?
-  role         Role      @default(BG_LEADER)
-  group        GroupName?
+  role         String    @default("BG_LEADER")
+  group        String?
   bg           Int?
-  subgroup     SubGroup?
+  subgroup     String?
   isActive     Boolean   @default(true)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
@@ -65,9 +29,9 @@ model Member {
   id           String    @id @default(uuid())
   name         String
   phone        String?
-  group        GroupName
+  group        String
   bg           Int
-  subgroup     SubGroup?
+  subgroup     String?
   isActive     Boolean   @default(true)
   joinedAt     DateTime  @default(now())
   createdAt    DateTime  @default(now())
@@ -75,19 +39,19 @@ model Member {
 }
 
 model Activity {
-  id            String        @id @default(uuid())
+  id            String    @id @default(uuid())
   weekStart     DateTime
-  day           DayOfWeek
-  type          ActivityType
-  attendees     String        @default("[]")  // JSON array of member IDs
-  absentees     String        @default("[]")  // JSON array of member IDs
-  absenteeReasons String      @default("{}")  // JSON object {memberId: reason}
-  listened      String        @default("[]")  // JSON array of member IDs
+  day           String
+  type          String
+  attendees     String    @default("[]")
+  absentees     String    @default("[]")
+  absenteeReasons String   @default("{}")
+  listened      String    @default("[]")
   notes         String?
   createdById   String
-  createdBy     User          @relation(fields: [createdById], references: [id])
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  createdBy     User      @relation(fields: [createdById], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 model WeeklyReport {
@@ -97,12 +61,10 @@ model WeeklyReport {
   weekStart       DateTime
   weekEnd         DateTime
   
-  // Vie personnelle
   personalLife    String?
   
-  // Travail du berger
   tuesdayMobilized      Boolean @default(false)
-  tuesdayDesignated     String  @default("[]") // JSON array
+  tuesdayDesignated     String  @default("[]")
   tuesdayCount          Int     @default(0)
   
   wednesdayMobilized    Boolean @default(false)
@@ -118,31 +80,26 @@ model WeeklyReport {
   sundayCount           Int     @default(0)
   sundayListened        Int     @default(0)
   
-  // Programme église
   monthlyActivities    String?
   prayerChains         String?
   qiQuotidien          Boolean @default(false)
   qiIntermittent       Boolean @default(false)
   bookToStudy          String?
   
-  // Absences
-  absencesNames     String  @default("[]") // JSON array
-  absencesReasons   String  @default("{}") // JSON object
+  absencesNames     String  @default("[]")
+  absencesReasons   String  @default("{}")
   
-  // Encadrement
   supervisionTheme     String?
-  visitedPersons       String  @default("[]") // JSON array
+  visitedPersons       String  @default("[]")
   visitPurpose         String?
   visitDate            String?
   visitTime            String?
   
-  // Observations
   otherObservations   String?
   
-  // Signature
   signature        Boolean @default(false)
   signedAt         DateTime?
-  status           String  @default("DRAFT") // DRAFT, SUBMITTED
+  status           String  @default("DRAFT")
   
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt

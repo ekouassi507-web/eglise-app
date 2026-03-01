@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Users, Calendar, FileText, TrendingUp, Church, ChevronRight } from 'lucide-react'
+import { Users, Calendar, FileText, TrendingUp, ChevronRight } from 'lucide-react'
 import { useAuthStore } from '../../stores/auth'
 import api from '../../lib/api'
 

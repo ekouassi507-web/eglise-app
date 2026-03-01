@@ -4,8 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { motion } from 'framer-motion'
 import { Mail, Lock, LogIn } from 'lucide-react'
-import api from '../lib/api'
-import { useAuthStore } from '../stores/auth'
+import api from '../../lib/api'
+import { useAuthStore } from '../../stores/auth'
 
 const loginSchema = z.object({
   email: z.string().email('Email invalide'),

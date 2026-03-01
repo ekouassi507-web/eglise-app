@@ -9,19 +9,23 @@ const prisma = new PrismaClient();
 router.get('/', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const groups = ['PUISSANCE', 'SAGESSE', 'GLOIRE'];
-    const result = [];
+    const result: any[] = [];
     
     for (const group of groups) {
-      const bgCounts = await Promise.all(
-        [1, 2, 3, 4].map(bg => 
-          prisma.member.count({ where: { group: group as any, bg, isActive: true })
-        )
-      );
+      const bg1 = await prisma.member.count({ where: { group, bg: 1, isActive: true } });
+      const bg2 = await prisma.member.count({ where: { group, bg: 2, isActive: true } });
+      const bg3 = await prisma.member.count({ where: { group, bg: 3, isActive: true } });
+      const bg4 = await prisma.member.count({ where: { group, bg: 4, isActive: true } });
       
       result.push({
         name: group,
-        totalMembers: bgCounts.reduce((a, b) => a + b, 0),
-        bg: bgCounts.map((count, i) => ({ bg: i + 1, count }))
+        totalMembers: bg1 + bg2 + bg3 + bg4,
+        bg: [
+          { bg: 1, count: bg1 },
+          { bg: 2, count: bg2 },
+          { bg: 3, count: bg3 },
+          { bg: 4, count: bg4 }
+        ]
       });
     }
     
@@ -37,12 +41,15 @@ router.get('/:groupName', authenticate, async (req: AuthRequest, res: Response) 
     const { groupName } = req.params;
     
     const members = await prisma.member.findMany({
-      where: { group: groupName as any, isActive: true },
-      orderBy: [{ bg: 'asc' }, { name: 'asc' }]
+      where: { group: groupName, isActive: true },
+      orderBy: [
+        { bg: 'asc' },
+        { name: 'asc' }
+      ]
     });
     
-    const membersByBG = {};
-    members.forEach(m => {
+    const membersByBG: Record<number, any[]> = {};
+    members.forEach((m: any) => {
       if (!membersByBG[m.bg]) membersByBG[m.bg] = [];
       membersByBG[m.bg].push(m);
     });
@@ -62,11 +69,12 @@ router.get('/:groupName', authenticate, async (req: AuthRequest, res: Response) 
 router.get('/:groupName/bg/:bgNumber', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const { groupName, bgNumber } = req.params;
+    const bg = parseInt(bgNumber, 10);
     
     const members = await prisma.member.findMany({
       where: { 
-        group: groupName as any, 
-        bg: parseInt(bgNumber),
+        group: groupName, 
+        bg: bg,
         isActive: true 
       },
       orderBy: { name: 'asc' }
@@ -74,7 +82,7 @@ router.get('/:groupName/bg/:bgNumber', authenticate, async (req: AuthRequest, re
     
     res.json({
       group: groupName,
-      bg: parseInt(bgNumber),
+      bg: bg,
       members,
       totalMembers: members.length
     });

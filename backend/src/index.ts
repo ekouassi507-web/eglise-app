@@ -7,6 +7,7 @@ import groupRoutes from './modules/groups/routes';
 import activityRoutes from './modules/activities/routes';
 import reportRoutes from './modules/reports/routes';
 import analyticsRoutes from './modules/analytics/routes';
+import membersRoutes from './modules/members/routes';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use('/api/groups', groupRoutes);
 app.use('/api/activities', activityRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/members', membersRoutes);
 
 // Health check
 app.get('/api/health', (req: Request, res: Response) => {
