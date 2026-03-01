@@ -44,9 +44,12 @@ Pasteur (Admin Total)
   - **Responsable** : Voit uniquement son groupe
   - **BG Leader** : Voit uniquement son BG
 
-### 3.2 Gestion des Membres
+### 3.2 Gestion des Membres et Sous-groupes
 - Ajouter/modifier/supprimer des membres
 - Attribution à un BG
+- Sous-groupes optionnels par BG :
+  - Louange
+  - [Autre] (à définir)
 - Informations : Nom, téléphone,date de rejointte
 
 ### 3.3 Suivi des Activités Hebdomadaires
@@ -89,6 +92,7 @@ Pasteur (Admin Total)
   "role": "PASTEUR | RESPONSABLE | BG_LEADER",
   "group": "PUISSANCE | SAGESSE | GLOIRE | null",
   "bg": "1-4 | null",
+  "subgroup": "LOUANGE | AUTRE | null",  // Optionnel par BG
   "createdAt": "date"
 }
 ```
