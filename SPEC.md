@@ -121,7 +121,31 @@ Pasteur (Admin Total)
   "weekStart": "date",
   "weekEnd": "date",
   "personalLife": "string",        // Vie personnelle
-  "bergerWork": "string",          // Travail du berger
+  "bergerWork": {
+    "mobilization": {
+      "tuesday": {
+        "mobilized": "boolean",
+        "designatedMembers": ["userId"],  // Nouvelles personnes/peu spirituelle
+        "count": "number"
+      },
+      "wednesday": {
+        "mobilized": "boolean",
+        "fromTuesdayClass": "boolean",  // Ceux du mardi
+        "count": "number"
+      },
+      "friday": {
+        "mobilized": "boolean",
+        "allMembersConcerned": "boolean",
+        "count": "number"
+      },
+      "sunday": {
+        "mobilized": "boolean",
+        "allMembersConcerned": "boolean",
+        "count": "number",
+        "listened": "number"  // Ont écouté le message
+      }
+    }
+  },
   "churchProgram": {
     "monthlyActivities": "string",  // Activités mensuelles
     "prayerChains": "string",     // Chaînes de prière
