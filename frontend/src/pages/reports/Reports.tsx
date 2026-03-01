@@ -1,0 +1,33 @@
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { FileText, Plus, Download } from 'lucide-react'
+
+export default function Reports() {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <motion.h1 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-3xl font-bold"
+        >
+          Rapports
+        </motion.h1>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl font-medium"
+        >
+          <Plus className="w-5 h-5" />
+          Nouveau rapport
+        </motion.button>
+      </div>
+
+      <div className="glass-card rounded-2xl p-6">
+        <p className="text-gray-500 text-center py-8">
+          Les rapports hebdomadaires apparaîtront ici
+        </p>
+      </div>
+    </div>
+  )
+}

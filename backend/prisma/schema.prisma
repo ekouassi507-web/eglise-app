@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+enum Role {
+  PASTEUR
+  RESPONSABLE
+  BG_LEADER
+}
+
+enum GroupName {
+  PUISSANCE
+  SAGESSE
+  GLOIRE
+}
+
+enum SubGroup {
+  LOUANGE
+  FORCE
+  FAUSSES
+  RICHESSES
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+enum ActivityType {
+  MOBILIZATION
+  TEACHING
+  PRAYER
+  SERVICE
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  password     String
+  name         String
+  phone        String?
+  role         Role      @default(BG_LEADER)
+  group        GroupName?
+  bg           Int?
+  subgroup     SubGroup?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  activities   Activity[]
+  reports     WeeklyReport[]
+}
+
+model Member {
+  id           String    @id @default(uuid())
+  name         String
+  phone        String?
+  group        GroupName
+  bg           Int
+  subgroup     SubGroup?
+  isActive     Boolean   @default(true)
+  joinedAt     DateTime  @default(now())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Activity {
+  id            String        @id @default(uuid())
+  weekStart     DateTime
+  day           DayOfWeek
+  type          ActivityType
+  attendees     String        @default("[]")  // JSON array of member IDs
+  absentees     String        @default("[]")  // JSON array of member IDs
+  absenteeReasons String      @default("{}")  // JSON object {memberId: reason}
+  listened      String        @default("[]")  // JSON array of member IDs
+  notes         String?
+  createdById   String
+  createdBy     User          @relation(fields: [createdById], references: [id])
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model WeeklyReport {
+  id              String    @id @default(uuid())
+  bergerId        String
+  berger          User      @relation(fields: [bergerId], references: [id])
+  weekStart       DateTime
+  weekEnd         DateTime
+  
+  // Vie personnelle
+  personalLife    String?
+  
+  // Travail du berger
+  tuesdayMobilized      Boolean @default(false)
+  tuesdayDesignated     String  @default("[]") // JSON array
+  tuesdayCount          Int     @default(0)
+  
+  wednesdayMobilized    Boolean @default(false)
+  wednesdayFromTuesday  Boolean @default(false)
+  wednesdayCount        Int     @default(0)
+  
+  fridayMobilized       Boolean @default(false)
+  fridayAllMembers     Boolean @default(false)
+  fridayCount           Int     @default(0)
+  
+  sundayMobilized       Boolean @default(false)
+  sundayAllMembers     Boolean @default(false)
+  sundayCount           Int     @default(0)
+  sundayListened        Int     @default(0)
+  
+  // Programme église
+  monthlyActivities    String?
+  prayerChains         String?
+  qiQuotidien          Boolean @default(false)
+  qiIntermittent       Boolean @default(false)
+  bookToStudy          String?
+  
+  // Absences
+  absencesNames     String  @default("[]") // JSON array
+  absencesReasons   String  @default("{}") // JSON object
+  
+  // Encadrement
+  supervisionTheme     String?
+  visitedPersons       String  @default("[]") // JSON array
+  visitPurpose         String?
+  visitDate            String?
+  visitTime            String?
+  
+  // Observations
+  otherObservations   String?
+  
+  // Signature
+  signature        Boolean @default(false)
+  signedAt         DateTime?
+  status           String  @default("DRAFT") // DRAFT, SUBMITTED
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
